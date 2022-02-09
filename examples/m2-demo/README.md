@@ -4,13 +4,13 @@
 
 ## Setup the demo
 
-1) Ensure you have [kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/binaries/), and [kubectl](https://kubernetes.io/releases/download/) installed and on your path.
+1) Ensure you have [kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/binaries/), [kubectl](https://kubernetes.io/releases/download/), [psql](https://www.postgresql.org/download/) installed and on your path.
 
 2) Clone this repo and move into the `m2-demo` directory:
 ```
 git clone https://github.com/redhat-appstudio/managed-gitops
 
-git checkout m2-demo
+git checkout m2-demo-on-cluster
 
 cd managed-gitops/examples/m2-demo
 ```
