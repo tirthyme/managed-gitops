@@ -143,7 +143,7 @@ jobs:
           go-version: "1.17.6"
       - name: "Install go modules for migration"
         run: |
-          cd $GITHUB_WORKSPACE/db
+          cd $GITHUB_WORKSPACE/utilities/db-migration
           go mod download
       - name: "Start PostgreSQL"
         run: |
