@@ -53,6 +53,11 @@ jobs:
           cd $GITHUB_WORKSPACE/appstudio-controller
           make gosec
 
+      - name: "Ensure 'appstudio-shared' passes 'go-sec' - run 'make gosec' to identify issues"
+        run: |
+          cd $GITHUB_WORKSPACE/appstudio-shared
+          make gosec
+
       - name: "Ensure 'backend' passes 'go-lint' - run 'make lint' to identify issues"
         run: |
           curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.40.1
@@ -77,6 +82,11 @@ jobs:
       - name: "Ensure 'appstudio-controller' passes 'go-lint' - run 'make lint' to identify issues"
         run: |
           cd $GITHUB_WORKSPACE/appstudio-controller
+          make lint 
+
+      - name: "Ensure 'appstudio-shared' passes 'go-lint' - run 'make lint' to identify issues"
+        run: |
+          cd $GITHUB_WORKSPACE/appstudio-shared
           make lint 
 
 
@@ -131,6 +141,16 @@ jobs:
           go mod tidy
           git diff --exit-code -- .
 
+      - name: "Appstudio-shared: Download all Go modules"
+        run: |
+          cd $GITHUB_WORKSPACE/appstudio-shared
+          go mod download
+      - name: "Appstudio-shared: Check for tidyness of go.mod and go.sum: run `go mod tidy` to fix"
+        run: |
+          cd $GITHUB_WORKSPACE/appstudio-shared
+          go mod tidy
+          git diff --exit-code -- .
+
   validate-db-migration:
     name: Check if migration schema matches with super schema.
     runs-on: ubuntu-latest
@@ -173,7 +193,8 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE
           diff migration.sql master.sql
-  
+
+
   test-go:
     name: Run unit tests for Go packages
     runs-on: ubuntu-latest
@@ -207,3 +228,18 @@ jobs:
           make test
       - name: "Send coverage results to codecov.io"
         uses: codecov/codecov-action@v2.1.0
+
+  manifests:
+    name: "Ensure that manifests are up-to-date"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Setup Golang
+        uses: actions/setup-go@v3
+        with:
+          go-version: "1.17.6"
+      - name: "appstudio-shared: Run 'make generate manifests' and report any diff"
+        run: |
+          cd appstudio-controller
+          make generate manifests
+          git diff --exit-code -- .
