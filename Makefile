@@ -185,22 +185,29 @@ vendor: ## Clone locally the dependencies - off-line
 	cd $(MAKEFILE_ROOT)/backend && go mod vendor
 	cd $(MAKEFILE_ROOT)/cluster-agent && go mod vendor
 	cd $(MAKEFILE_ROOT)/appstudio-controller && go mod vendor	
-	cd $(MAKEFILE_ROOT)/db && go mod vendor	
 	cd $(MAKEFILE_ROOT)/tests-e2e && go mod vendor	
 	cd $(MAKEFILE_ROOT)/appstudio-controller && go mod vendor	
-	cd $(MAKEFILE_ROOT)/db && go mod vendor	
+	cd $(MAKEFILE_ROOT)/utilities/db-migration && go mod vendor	
 
 tidy: ## Tidy all components
 	cd $(MAKEFILE_ROOT)/backend-shared && go mod tidy
 	cd $(MAKEFILE_ROOT)/backend && go mod tidy 
 	cd $(MAKEFILE_ROOT)/cluster-agent && go mod tidy
 	cd $(MAKEFILE_ROOT)/appstudio-controller && go mod tidy
-	cd $(MAKEFILE_ROOT)/db && go mod tidy
 	cd $(MAKEFILE_ROOT)/tests-e2e && go mod tidy
-	cd $(MAKEFILE_ROOT)/db && go mod tidy
+	cd $(MAKEFILE_ROOT)/utilities/db-migration && go mod tidy
 	 
 fmt: ## Run 'go fmt' on all components
 	cd $(MAKEFILE_ROOT)/backend-shared && make fmt
 	cd $(MAKEFILE_ROOT)/backend && make fmt
 	cd $(MAKEFILE_ROOT)/cluster-agent && make fmt
 	cd $(MAKEFILE_ROOT)/appstudio-controller && make fmt
+
+db-migrate:
+	cd $(MAKEFILE_ROOT)/utilities/db-migration && go run main.go
+
+db-drop:
+	cd $(MAKEFILE_ROOT)/utilities/db-migration && go run main.go drop
+
+db-drop_smtable:
+	cd $(MAKEFILE_ROOT)/utilities/db-migration && go run main.go drop_smtable

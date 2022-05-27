@@ -1,9 +1,8 @@
-package main
+package migrate
 
 import (
 	"context"
 	"fmt"
-	"os"
 
 	logger "sigs.k8s.io/controller-runtime/pkg/log"
 
@@ -13,7 +12,7 @@ import (
 	db "github.com/redhat-appstudio/managed-gitops/backend-shared/config/db"
 )
 
-func main() {
+func Main(op_type string) {
 	addr, password := db.GetAddrAndPassword()
 	port := 5432
 	ctx := context.Background()
@@ -24,8 +23,8 @@ func main() {
 	if err != nil {
 		log.Error(err, fmt.Sprintf("%v", err))
 	}
-	if len(os.Args) >= 2 {
-		op_type := os.Args[1]
+	if len(op_type) > 0 {
+		// op_type := os.Args[1]
 		if op_type == "drop_smtable" {
 			dbq, err := db.ConnectToDatabaseWithPort(true, "postgres", port)
 			if err != nil {
@@ -44,7 +43,8 @@ func main() {
 			log.Info("Invalid argument passed.")
 		}
 	} else {
-		// applies every migrations till the lastest migration
+		// applies every migrations till the lastest migration-sql present.
+		// Automatically makes sure about the version the current database is on and updates it.
 		if err := m.Up(); err != nil {
 			log.Error(err, fmt.Sprintf("%v", err))
 		}

@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - "main"
-      - "db-migration"
+      - "new-db-migration"
   pull_request:
     branches:
       - "*"
@@ -155,16 +155,16 @@ jobs:
           pg_dump postgresql://postgres:gitops@localhost:5432/postgres > master.sql && cat master.sql
       - name: "Clean the state of db."
         run: |
-          cd $GITHUB_WORKSPACE/db
-          go run migrate_db.go drop
+          cd $GITHUB_WORKSPACE/
+          make db-drop
       - name: "Apply migrations to the db."
         run: |
-          cd $GITHUB_WORKSPACE/db
-          go run migrate_db.go
+          cd $GITHUB_WORKSPACE/
+          make db-migrate
       - name: "Remove the schema_migration table."
         run: |
-          cd $GITHUB_WORKSPACE/db
-          go run migrate_db.go drop_smtable
+          cd $GITHUB_WORKSPACE/
+          make db-drop_smtable
       - name: "Create a pg_dump file for migration schema"
         run: |
           cd $GITHUB_WORKSPACE
