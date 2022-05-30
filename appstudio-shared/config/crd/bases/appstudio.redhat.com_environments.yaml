@@ -1,0 +1,103 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.8.0
+  creationTimestamp: null
+  name: environments.appstudio.redhat.com
+spec:
+  group: appstudio.redhat.com
+  names:
+    kind: Environment
+    listKind: EnvironmentList
+    plural: environments
+    singular: environment
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Environment is the Schema for the environments API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: EnvironmentSpec defines the desired state of Environment
+            properties:
+              configuration:
+                description: Configuration contains environment-specific details for
+                  Applications/Components that are deployed to the Environment.
+                properties:
+                  env:
+                    description: Env is an array of standard environment vairables
+                    items:
+                      description: EnvVarPair describes environment variables to use
+                        for the component
+                      properties:
+                        name:
+                          description: Name is the environment variable name
+                          type: string
+                        value:
+                          description: Value is the environment variable value
+                          type: string
+                      required:
+                      - name
+                      - value
+                      type: object
+                    type: array
+                required:
+                - env
+                type: object
+              deploymentStrategy:
+                description: DeploymentStrategy is the promotion strategy for the
+                  Environment See Environment API doc for details.
+                type: string
+              displayName:
+                description: DisplayName is the user-visible, user-definable name
+                  for the environment (but not used for functional requirements)
+                type: string
+              parentEnvironment:
+                description: 'ParentEnvironment references another Environment defined
+                  in the namespace: when automated promotion is enabled, promotions
+                  to the parent environment will cause this environment to be promoted
+                  to. See Environment API doc for details.'
+                type: string
+              tags:
+                description: Tags are a user-visisble, user-definable set of tags
+                  that can be applied to the environment
+                items:
+                  type: string
+                type: array
+              type:
+                description: Type is whether the Environment is a POC or non-POC environment
+                type: string
+            required:
+            - deploymentStrategy
+            - displayName
+            - type
+            type: object
+          status:
+            description: EnvironmentStatus defines the observed state of Environment
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
