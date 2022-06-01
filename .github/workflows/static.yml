@@ -16,9 +16,9 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Setup Golang
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v3.2.0
         with:
-          go-version: "1.17.6"
+          go-version-file: './backend/go.mod'
       - name: "Run make fmt and then 'git diff' to see if anything changed: to fix this check, run make fmt and then commit the changes."
         run: |
           make fmt
@@ -30,12 +30,12 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Setup Golang
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v3.2.0
         with:
-          go-version: "1.17.6"
+          go-version-file: './backend/go.mod'
       - name: "Install gosec"
         run: |
-          go get -u github.com/securego/gosec/v2/cmd/gosec
+          go install github.com/securego/gosec/v2/cmd/gosec@latest
       - name: "Ensure 'backend' passes 'go-sec' - run 'make gosec' to identify issues"
         run: |
           cd $GITHUB_WORKSPACE/backend
@@ -60,7 +60,7 @@ jobs:
 
       - name: "Ensure 'backend' passes 'go-lint' - run 'make lint' to identify issues"
         run: |
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.40.1
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.46.2
           cd $GITHUB_WORKSPACE/backend
           make lint 
 
@@ -89,6 +89,11 @@ jobs:
           cd $GITHUB_WORKSPACE/appstudio-shared
           make lint 
 
+      - name: "Ensure 'db-migration' passes 'go-lint' - run 'make lint' to identify issues"
+        run: |
+          cd $GITHUB_WORKSPACE/utilities/db-migration
+          make lint 
+
 
   check-go:
     name: Ensure Go modules synchronicity
@@ -97,9 +102,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Setup Golang
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v3.2.0
         with:
-          go-version: "1.17.6"
+          go-version-file: './backend/go.mod'
 
       - name: "Backend: Download all Go modules"
         run: |
@@ -160,40 +165,11 @@ jobs:
       - name: Setup Golang
         uses: actions/setup-go@v3
         with:
-          go-version: "1.17.6"
+          go-version-file: './backend/go.mod'
       - name: "Install go modules for migration"
         run: |
-          cd $GITHUB_WORKSPACE/utilities/db-migration
-          go mod download
-      - name: "Start PostgreSQL"
-        run: |
-          cd $GITHUB_WORKSPACE
-          ./create-dev-env.sh
-      - name: "Create a pg_dump file for master schema"
-        run: |
-          cd $GITHUB_WORKSPACE
-          pg_dump postgresql://postgres:gitops@localhost:5432/postgres > master.sql && cat master.sql
-      - name: "Clean the state of db."
-        run: |
-          cd $GITHUB_WORKSPACE/
-          make db-drop
-      - name: "Apply migrations to the db."
-        run: |
-          cd $GITHUB_WORKSPACE/
-          make db-migrate
-      - name: "Remove the schema_migration table."
-        run: |
-          cd $GITHUB_WORKSPACE/
-          make db-drop_smtable
-      - name: "Create a pg_dump file for migration schema"
-        run: |
-          cd $GITHUB_WORKSPACE
-          pg_dump postgresql://postgres:gitops@localhost:5432/postgres > migration.sql && cat migration.sql
-      - name: "Execute diff to check for any discrepencies"
-        run: |
-          cd $GITHUB_WORKSPACE
-          diff migration.sql master.sql
-
+          cd $GITHUB_WORKSPACE/utilities
+          ./check-db-schema.sh
 
   test-go:
     name: Run unit tests for Go packages
@@ -202,9 +178,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Setup Golang
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v3.2.0
         with:
-          go-version: "1.17.6"
+          go-version-file: './backend/go.mod'
       - name: "Start PostgreSQL"
         run: |
           cd $GITHUB_WORKSPACE
@@ -235,11 +211,11 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Setup Golang
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v3.2.0
         with:
-          go-version: "1.17.6"
-      - name: "appstudio-shared: Run 'make generate manifests' and report any diff"
+          go-version-file: './backend/go.mod'
+      - name: "Run 'make generate manifests' and report any diff"
         run: |
-          cd appstudio-controller
-          make generate manifests
+          cd $GITHUB_WORKSPACE
+          make generate-manifests
           git diff --exit-code -- .

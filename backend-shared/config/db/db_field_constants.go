@@ -47,7 +47,7 @@ const (
 	DeploymentToApplicationMappingDeploymenttoapplicationmappingUIDIDLength = 48
 	DeploymentToApplicationMappingNameLength                                = 256
 	DeploymentToApplicationMappingNamespaceLength                           = 96
-	DeploymentToApplicationMappingWorkspaceUIDLength                        = 48
+	DeploymentToApplicationMappingNamespaceUIDLength                        = 48
 	DeploymentToApplicationMappingApplicationIDLength                       = 48
 	KubernetesToDBResourceMappingKubernetesResourceTypeLength               = 64
 	KubernetesToDBResourceMappingKubernetesResourceUIDLength                = 64
@@ -57,12 +57,11 @@ const (
 	APICRToDatabaseMappingApiResourceUIDLength                              = 64
 	APICRToDatabaseMappingApiResourceNameLength                             = 256
 	APICRToDatabaseMappingApiResourceNamespaceLength                        = 256
-	APICRToDatabaseMappingApiResourceWorkspaceUIDLength                     = 64
+	APICRToDatabaseMappingApiResourceNamespaceUIDLength                     = 64
 	APICRToDatabaseMappingDbRelationTypeLength                              = 32
 	APICRToDatabaseMappingDbRelationKeyLength                               = 64
 	SyncOperationSyncoperationIDLength                                      = 48
 	SyncOperationApplicationIDLength                                        = 48
-	SyncOperationOperationIDLength                                          = 48
 	SyncOperationDeploymentNameLength                                       = 256
 	SyncOperationRevisionLength                                             = 256
 	SyncOperationDesiredStateLength                                         = 16
@@ -142,8 +141,7 @@ var DbFieldMap = map[string]int{
 	"DeploymentToApplicationMappingDeploymentNameLength":                      DeploymentToApplicationMappingNameLength,
 	"DeploymentToApplicationMappingNamespaceLength":                           DeploymentToApplicationMappingNamespaceLength,
 	"DeploymentToApplicationMappingDeploymentNamespaceLength":                 DeploymentToApplicationMappingNamespaceLength,
-	"DeploymentToApplicationMappingNamespaceUIDLength":                        DeploymentToApplicationMappingWorkspaceUIDLength,
-	"DeploymentToApplicationMappingWorkspaceUIDLength":                        DeploymentToApplicationMappingWorkspaceUIDLength,
+	"DeploymentToApplicationMappingNamespaceUIDLength":                        DeploymentToApplicationMappingNamespaceUIDLength,
 	"DeploymentToApplicationMappingApplicationIDLength":                       DeploymentToApplicationMappingApplicationIDLength,
 	"KubernetesToDBResourceMappingKubernetesResourceTypeLength":               KubernetesToDBResourceMappingKubernetesResourceTypeLength,
 	"KubernetesToDBResourceMappingKubernetesResourceUIDLength":                KubernetesToDBResourceMappingKubernetesResourceUIDLength,
@@ -159,8 +157,8 @@ var DbFieldMap = map[string]int{
 	"APICRToDatabaseMappingAPIResourceNameLength":                             APICRToDatabaseMappingApiResourceNameLength,
 	"APICRToDatabaseMappingApiResourceNamespaceLength":                        APICRToDatabaseMappingApiResourceNamespaceLength,
 	"APICRToDatabaseMappingAPIResourceNamespaceLength":                        APICRToDatabaseMappingApiResourceNamespaceLength,
-	"APICRToDatabaseMappingApiResourceWorkspaceUIDLength":                     APICRToDatabaseMappingApiResourceWorkspaceUIDLength,
-	"APICRToDatabaseMappingWorkspaceUIDLength":                                APICRToDatabaseMappingApiResourceWorkspaceUIDLength,
+	"APICRToDatabaseMappingApiResourceNamespaceUIDLength":                     APICRToDatabaseMappingApiResourceNamespaceUIDLength,
+	"APICRToDatabaseMappingNamespaceUIDLength":                                APICRToDatabaseMappingApiResourceNamespaceUIDLength,
 	"APICRToDatabaseMappingDbRelationTypeLength":                              APICRToDatabaseMappingDbRelationTypeLength,
 	"APICRToDatabaseMappingDBRelationTypeLength":                              APICRToDatabaseMappingDbRelationTypeLength,
 	"APICRToDatabaseMappingDbRelationKeyLength":                               APICRToDatabaseMappingDbRelationKeyLength,
@@ -168,7 +166,6 @@ var DbFieldMap = map[string]int{
 	"SyncOperationSyncoperationIDLength":                                      SyncOperationSyncoperationIDLength,
 	"SyncOperationSyncOperationIDLength":                                      SyncOperationSyncoperationIDLength,
 	"SyncOperationApplicationIDLength":                                        SyncOperationApplicationIDLength,
-	"SyncOperationOperationIDLength":                                          SyncOperationOperationIDLength,
 	"SyncOperationDeploymentNameLength":                                       SyncOperationDeploymentNameLength,
 	"SyncOperationDeploymentNameFieldLength":                                  SyncOperationDeploymentNameLength,
 	"SyncOperationRevisionLength":                                             SyncOperationRevisionLength,

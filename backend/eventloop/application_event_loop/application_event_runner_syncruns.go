@@ -182,7 +182,6 @@ func (a *applicationEventLoopRunner_Action) applicationEventRunner_handleSyncRun
 		// Create sync operation
 		syncOperation := &db.SyncOperation{
 			Application_id:      application.Application_id,
-			Operation_id:        "delme", // TODO: GITOPSRVCE-67 - DEBT - This field can probably be removed from the database
 			DeploymentNameField: syncRunCR.Spec.GitopsDeploymentName,
 			Revision:            syncRunCR.Spec.RevisionID,
 			DesiredState:        db.SyncOperation_DesiredState_Running,
@@ -203,7 +202,7 @@ func (a *applicationEventLoopRunner_Action) applicationEventRunner_handleSyncRun
 
 			APIResourceName:      syncRunCR.Name,
 			APIResourceNamespace: syncRunCR.Namespace,
-			WorkspaceUID:         eventlooptypes.GetWorkspaceIDFromNamespaceID(namespace),
+			NamespaceUID:         eventlooptypes.GetWorkspaceIDFromNamespaceID(namespace),
 		}
 		if err := dbQueries.CreateAPICRToDatabaseMapping(ctx, &newApiCRToDBMapping); err != nil {
 			log.Error(err, "unable to create api to db mapping in database")
@@ -349,8 +348,8 @@ func (a *applicationEventLoopRunner_Action) applicationEventRunner_handleSyncRun
 	if syncRunCRExists && dbEntryExists {
 
 		// Sanity checks
-		if syncRunCR == nil {
-			err := fmt.Errorf("SEVERE - vsync run cr is nil")
+		if syncRunCR == (&managedgitopsv1alpha1.GitOpsDeploymentSyncRun{}) {
+			err := fmt.Errorf("SEVERE - vsync run cr is empty")
 			log.Error(err, err.Error())
 			return false, err
 		}
